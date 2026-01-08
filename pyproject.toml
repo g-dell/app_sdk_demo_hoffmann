@@ -28,3 +28,4 @@ mcp-server-motherduck = "mcp_server_motherduck:main"
 
 [tool.hatchling.build.targets.wheel]
 packages = ["src/mcp_server_motherduck"]
+only-include = ["src/mcp_server_motherduck"]
