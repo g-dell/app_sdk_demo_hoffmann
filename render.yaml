@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: mcp-server-motherduck
+    env: python
+    buildCommand: pip install uv && if [ -f pyproject.toml ]; then uv pip install -e .; elif [ -f ../pyproject.toml ]; then cd .. && uv pip install -e .; else PYTHON_ROOT=$(find /opt/render/project -maxdepth 3 -name pyproject.toml -type f 2>/dev/null | head -1); if [ -n "$PYTHON_ROOT" ]; then cd $(dirname "$PYTHON_ROOT") && uv pip install -e .; else echo "ERROR: pyproject.toml not found" && pwd && ls -la && exit 1; fi; fi
+    startCommand: uv run mcp-server-motherduck --transport sse --host 0.0.0.0 --port $PORT --db-path md:mcp_app_ChatGPT --motherduck-token $MOTHERDUCK_TOKEN
+    envVars:
+      - key: MOTHERDUCK_TOKEN
+        sync: false
+      - key: PORT
+        fromService:
+          type: web
+          name: mcp-server-motherduck
+          property: port
